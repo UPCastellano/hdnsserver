@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falta de Material</title>
+    <style>
+        /* Estilo para las observaciones */
+        .pending {
+            color: red;
+        }
+
+        .completed {
+            color: green;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.css">
+    <link rel="stylesheet" href="/styles.css">
+
+</head>
+
+<body>
+    <nav class="nav-content">
+        <div class="nav-content">
+            <img src="/logo.png" alt="Logo de la empresa" class="logo">
+            <div class="nav-links">
+                <a href="/retrabajos"><i class="fas fa-redo"></i> Retrabajos</a>
+                <a href="/faltapersonal"><i class="fas fa-user-times"></i> Falta Personal</a>
+                <a href="/faltamaterial" class="active"><i class="fas fa-box-open"></i> Falta Material</a>
+                <a href="/actividadesnuevas"><i class="fas fa-tasks"></i> Actividades Nuevas</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Falta de Material</h1>
+        <div class="btn-container">
+            <button id="addBtn" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar falta de
+                material</button>
+        </div>
+        <div class="table-container">
+            <table id="dataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Nivel</th>
+                        <th>Actividad</th>
+                        <th>Ubicación</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Impacto</th>
+                        <th>Observación</th>
+                        <th>Usuario</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Agregar falta de material</h2>
+            <form id="itemForm">
+                <input type="hidden" id="id">
+                <div class="form-group">
+                    <label for="fecha">Fecha:</label>
+                    <input type="datetime-local" id="fecha">
+                </div>
+                <div class="form-group">
+                    <label for="nivel">Nivel:</label>
+                    <input type="text" id="nivel">
+                </div>
+                <div class="form-group">
+                    <label for="actividad">Actividad:</label>
+                    <input type="text" id="actividad">
+                </div>
+                <div class="form-group">
+                    <label for="ubicacion">Ubicación:</label>
+                    <input type="text" id="ubicacion">
+                </div>
+                <div class="form-group">
+                    <label for="inicio">Inicio:</label>
+                    <input type="datetime-local" id="inicio">
+                </div>
+                <div class="form-group">
+                    <label for="fin">Fin:</label>
+                    <input type="datetime-local" id="fin">
+                </div>
+                <div class="form-group">
+                    <label for="impacto">Impacto:</label>
+                    <input type="text" id="impacto">
+                </div>
+                <div class="form-group">
+                    <label for="observacion">Observación:</label>
+                    <input type="text" id="observacion">
+                </div>
+                <div class="form-group">
+                    <label for="usuario">Usuario:</label>
+                    <input type="text" id="usuario">
+                </div>
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+            <script>
+                // Selección de los elementos
+                const startDateInput = document.getElementById("inicio");
+                const endDateInput = document.getElementById("fin");
+                const daysHoursInput = document.getElementById("impacto");
+                const observationInput = document.getElementById("observacion");
+
+                // Función para obtener la fecha actual en formato 'YYYY-MM-DD'
+                function getCurrentDate() {
+                    const now = new Date();
+                    return now.toISOString().slice(0, 10); // Formato 'YYYY-MM-DD'
+                }
+
+                // Función para calcular los días y horas de diferencia
+                function calculateDaysAndHours() {
+                    const startDate = new Date(startDateInput.value);
+                    const endDate = new Date(endDateInput.value);
+
+                    // Verificar si la fecha de inicio es válida
+                    if (isNaN(startDate)) {
+                        daysHoursInput.value = "Selecciona la fecha de inicio";
+                        observationInput.value = "Pendiente - " + getCurrentDate();  // Pendiente con la fecha actual
+                        observationInput.classList.remove("completed");
+                        observationInput.classList.add("pending");
+                        return;
+                    }
+
+                    // Calcular la diferencia en tiempo (milisegundos)
+                    const differenceInTime = endDate - startDate;
+
+                    // Calcular los días y horas
+                    const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));  // Días
+                    const remainingHours = Math.floor((differenceInTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));  // Horas
+
+                    // Mostrar los resultados
+                    daysHoursInput.value = `${differenceInDays} días y ${remainingHours} horas`;
+
+                    // Si el campo de fecha fin está vacío, asignar 'Pendiente'
+                    if (endDateInput.value.trim() === "") {
+                        observationInput.value = "Pendiente - " + getCurrentDate();  // "Pendiente" con la fecha actual
+                        observationInput.classList.remove("completed");
+                        observationInput.classList.add("pending");
+                    } else {
+                        observationInput.value = "Finalizado";  // Si hay fecha de fin
+                        observationInput.classList.remove("pending");
+                        observationInput.classList.add("completed");
+                    }
+                }
+
+                // Evento para calcular cuando cambian las fechas
+                startDateInput.addEventListener("change", calculateDaysAndHours);
+                endDateInput.addEventListener("change", calculateDaysAndHours);
+
+                // Evento para manejar el envío del formulario
+                const form = document.getElementById("form");
+                form.addEventListener("submit", function (event) {
+                    event.preventDefault();  // Evitar que el formulario recargue la página
+                    calculateDaysAndHours(); // Solo actualiza la observación y los datos
+                });
+
+                //         </script>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="/js/faltamaterial.js"></script>
+</body>
+
+</html>>
