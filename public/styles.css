@@ -15,6 +15,12 @@ body {
   color: var(--text-color);
   line-height: 1.6;
 }
+.table-container{
+  width: 100%;
+  overflow-x: auto;
+  margin: 0;
+  padding: 0;
+}
 
 .btn-container {
   display: flex;
@@ -31,9 +37,10 @@ body {
   overflow-x: auto; /* Permite el desplazamiento horizontal en pantallas pequeñas */
 }
 .container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 15px;
+  padding: 0;
 }
 
 nav {
@@ -75,9 +82,9 @@ h1 {
 .table-container {
   background-color: var(--light-text-color);
   border-radius: 8px;
-  padding: 20px;
+  padding:10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
+  margin-top: 10px;
   overflow-x: auto;
   width: 100%;
 }
@@ -86,13 +93,13 @@ table.dataTable {
   width: 100% !important;
   margin: 0 auto;
   clear: both;
-  border-collapse: separate;
+ 
   border-spacing: 0;
 }
 
 table {
   width: 100%;
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
 }
 
@@ -102,9 +109,9 @@ table {
 }
 
 th, td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
+  border: 1px solid #08034b;
+  padding: 8px;
+  text-align: center;
 }
 
 th {
@@ -119,7 +126,7 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-  background-color: #e6e6e6;
+  background-color: #8b8585;
 }
 
 .btn-container {
@@ -238,7 +245,7 @@ tr:hover {
   resize: vertical;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 768px) {
   .container {
     padding: 10px;
   }
@@ -266,7 +273,7 @@ tr:hover {
 }
 
 .logo {
-    height: 40px;
+    height: 60px;
     width: auto;
 }
 
@@ -288,7 +295,11 @@ tr:hover {
         justify-content: center;
     }
 }
-
+nav a:hover, nav a.active {
+  background-color: rgba(255, 255, 255, 0.2); /* Fondo claro al pasar el mouse */
+  transform: translateY(-2px); /* Efecto de elevación */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+}
 /* Estilos para el scroll */
 ::-webkit-scrollbar {
   width: 12px;
@@ -310,7 +321,7 @@ tr:hover {
 }
 /* Estilos para los botones de DataTables */
 .btn {
-  color: #ffffff;
+  color: #0a0f0f;
   border: none;
   padding: 0.375rem 0.75rem;
   margin: 0.125rem;
@@ -357,7 +368,7 @@ tr:hover {
   margin: 20px auto;
   padding: 10px 20px;
   background-color: #4CAF50;
-  color: white;
+  color: rgb(225, 250, 86);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -400,9 +411,16 @@ tr:hover {
 }
 
 .table-row-warning {
-  background-color: #fff3cd; /* Amarillo claro */
+  background-color: #f1d371; /* Amarillo claro */
 }
 
 .table-row-danger {
   background-color: #f8d7da; /* Rojo claro */
+}
+tr:nth-child(even) {
+  background-color: #7a7171; /* Color de fondo alternativo */
+}
+
+tr:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Efecto hover más suave */
 }
