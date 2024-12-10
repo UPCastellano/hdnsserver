@@ -16,6 +16,7 @@ $(document).ready(function() {
             { data: 'impacto' },
             { data: 'observacion' },
             { data: 'usuario' },
+            { data: 'etapas' },
             {
 
                 
@@ -124,7 +125,8 @@ $(document).ready(function() {
             fin: $('#fin').val() || null ,
             impacto: $('#impacto').val(),
             observacion: $('#observacion').val(),
-            usuario: $('#usuario').val()
+            usuario: $('#usuario').val(),
+            etapas: $('#etapas').val()
         };
 
         const id = $('#id').val();
@@ -160,6 +162,7 @@ $(document).ready(function() {
             $('#impacto').val(data.impacto);
             $('#observacion').val(data.observacion);
             $('#usuario').val(data.usuario);
+            $('#etapas').val(data.etapas);
         } else {
             $('#modalTitle').text('Agregar Retrabajo');
             itemForm.reset();
