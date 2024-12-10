@@ -24,7 +24,8 @@ body {
 
 .btn-container {
   display: flex;
-  flex-direction: column; /* Cambia a columna en pantallas pequeñas */
+  flex-direction: column;
+  justify-content: center; /* Cambia a columna en pantallas pequeñas */
 }
 
 @media (min-width: 576px) {
