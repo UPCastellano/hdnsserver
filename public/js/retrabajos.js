@@ -2,6 +2,7 @@ $(document).ready(function() {
     let table = $('#dataTable').DataTable({
         ajax: {
             url: '/api/Retrabajos',
+            type: "GET",
             dataSrc: ''
         },
         columns: [
@@ -30,7 +31,7 @@ $(document).ready(function() {
             }
             
         ],
-
+            
         createdRow: function(row, data, dataIndex) {
             if (data.impacto > 5) {
                 $(row).addClass('table-row-danger'); // Si el impacto es mayor a 5, color rojo
@@ -79,13 +80,18 @@ $(document).ready(function() {
                 next: 'Siguiente',
                 previous: 'Anterior'
             },
+            
             lengthMenu: 'Mostrar _MENU_ registros por página',
             zeroRecords: 'No se encontraron resultados',
             info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
             infoEmpty: 'Mostrando 0 a 0 de 0 registros',
             infoFiltered: '(filtrado de _MAX_ registros totales)',
             search: 'Buscar:'
-        }
+            
+        },
+       "error": function (xhr, error, thrown) {
+            console.error('Error en DataTables:', error);
+        } 
     });
 
     const modal = document.getElementById('modal');

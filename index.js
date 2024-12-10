@@ -17,6 +17,13 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Algo salió mal!');
+});
+
 
 const db = mysql.createConnection({
   host: 'b5zhe2m18gxf4o21urv4-mysql.services.clever-cloud.com',
