@@ -20,9 +20,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.css">
-    <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.css">
     <link rel="stylesheet" href="/styles.css">
 
 </head>
@@ -63,7 +62,7 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+              
             </table>
            
         </div>
@@ -77,7 +76,7 @@
                 <input type="hidden" id="id">
                 <div class="form-group">
                     <label for="fecha">Fecha:</label>
-                    <input type="datetime-local" id="fecha" placeholder="Ingresa Fecha">
+                    <input type="date" id="fecha" placeholder="Ingresa Fecha">
                 </div>
                 <div class="form-group">
                     <label for="nivel">Nivel:</label>
@@ -93,11 +92,11 @@
                 </div>
                 <div class="form-group">
                     <label for="inicio">Inicio:</label>
-                    <input type="datetime-local" id="inicio" placeholder="Fecha Inicio">
+                    <input type="date" id="inicio" placeholder="Fecha Inicio">
                 </div>
                 <div class="form-group">
                     <label for="fin">Fin:</label>
-                    <input type="datetime-local" id="fin" placeholder="Fecha Fin">
+                    <input type="date" id="fin" placeholder="Fecha Fin">
                 </div>
                 <div class="form-group">
                     <label for="impacto">Impacto:</label>
@@ -119,67 +118,64 @@
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
-            <script>
-                // Selección de los elementos
-                const startDateInput = document.getElementById("inicio");
-                const endDateInput = document.getElementById("fin");
-                const daysHoursInput = document.getElementById("impacto");
-                const observationInput = document.getElementById("observacion");
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Selección de los elementos
+    const startDateInput = document.getElementById("inicio");
+    const endDateInput = document.getElementById("fin");
+    const daysInput = document.getElementById("impacto");
+    const observationInput = document.getElementById("observacion");
 
-                // Función para obtener la fecha actual en formato 'YYYY-MM-DD'
-                function getCurrentDate() {
-                    const now = new Date();
-                    return now.toISOString().slice(0, 10); // Formato 'YYYY-MM-DD'
-                }
+    // Función para obtener la fecha actual en formato 'YYYY-MM-DD'
+    function getCurrentDate() {
+        const now = new Date();
+        return now.toISOString().slice(0, 10);
+    }
 
-                // Función para calcular los días y horas de diferencia
-                function calculateDaysAndHours() {
-                    const startDate = new Date(startDateInput.value);
-                    const endDate = new Date(endDateInput.value);
+    // Función para calcular los días de diferencia
+    function calculateDays() {
+        const startDate = new Date(startDateInput.value);
+        const endDate = new Date(endDateInput.value);
 
-                    // Verificar si la fecha de inicio es válida
-                    if (isNaN(startDate)) {
-                        daysHoursInput.value = "Selecciona la fecha de inicio";
-                        observationInput.value = "Pendiente - " + getCurrentDate();  // Pendiente con la fecha actual
-                        observationInput.classList.remove("completed");
-                        observationInput.classList.add("pending");
-                        return;
-                    }
+        // Verificar si la fecha de inicio es válida
+        if (isNaN(startDate)) {
+            daysInput.value = "Selecciona la fecha de inicio";
+            observationInput.value = "Pendiente - " + getCurrentDate();
+            observationInput.classList.remove("completed");
+            observationInput.classList.add("pending");
+            return;
+        }
 
-                    // Calcular la diferencia en tiempo (milisegundos)
-                    const differenceInTime = endDate - startDate;
+        // Calcular la diferencia en días
+        const differenceInTime = endDate - startDate;
+        const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));
 
-                    // Calcular los días y horas
-                    const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));  // Días
-                    const remainingHours = Math.floor((differenceInTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));  // Horas
+        // Mostrar los resultados
+        if (endDateInput.value.trim() === "") {
+            daysInput.value = "No Impacto";
+            observationInput.value = "Pendiente - " + getCurrentDate();
+            observationInput.classList.remove("completed");
+            observationInput.classList.add("pending");
+        } else {
+            daysInput.value = `${differenceInDays} días`;
+            observationInput.value = "Finalizado";
+            observationInput.classList.remove("pending");
+            observationInput.classList.add("completed");
+        }
+    }
 
-                    // Mostrar los resultados
-                    daysHoursInput.value = `${differenceInDays} días y ${remainingHours} horas`;
+    // Evento para calcular cuando cambian las fechas
+    startDateInput.addEventListener("change", calculateDays);
+    endDateInput.addEventListener("change", calculateDays);
 
-                    // Si el campo de fecha fin está vacío, asignar 'Pendiente'
-                    if (endDateInput.value.trim() === "") {
-                        observationInput.value = "Pendiente - " + getCurrentDate();  // "Pendiente" con la fecha actual
-                        observationInput.classList.remove("completed");
-                        observationInput.classList.add("pending");
-                    } else {
-                        observationInput.value = "Finalizado";  // Si hay fecha de fin
-                        observationInput.classList.remove("pending");
-                        observationInput.classList.add("completed");
-                    }
-                }
-
-                // Evento para calcular cuando cambian las fechas
-                startDateInput.addEventListener("change", calculateDaysAndHours);
-                endDateInput.addEventListener("change", calculateDaysAndHours);
-
-                // Evento para manejar el envío del formulario
-                const form = document.getElementById("form");
-                form.addEventListener("submit", function (event) {
-                    event.preventDefault();  // Evitar que el formulario recargue la página
-                    calculateDaysAndHours(); // Solo actualiza la observación y los datos
-                });
-
-                //         </script>
+    // Evento para manejar el envío del formulario
+    const form = document.getElementById("itemForm"); // CORREGIDO
+    form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Evitar que el formulario recargue la página
+        calculateDays(); // Actualiza la observación y los datos
+    });
+});
+ </script>
         </div>
     </div>
 

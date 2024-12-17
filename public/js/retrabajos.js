@@ -187,6 +187,7 @@ $(document).ready(function() {
             },
             error: function(err) {
                 console.error('Error creating item:', err);
+                console.log('Error details:', err.responseText);
             }
         });
     }

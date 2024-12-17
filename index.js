@@ -11,39 +11,40 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Servir archivos estáticos desde la carpeta 'public'
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Middleware para habilitar CORS y parsear JSON y URL-encoded
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Algo salió mal!');
-});
 
-
-const db = mysql.createConnection({
+// Configuración del pool de conexiones a MySQL
+const db = mysql.createPool({
   host: 'b5zhe2m18gxf4o21urv4-mysql.services.clever-cloud.com',
   user: 'umwur6ojkucomjv1',
   password: 'JZ6esKH4Zkkld5pUsYIv',
-  database: 'b5zhe2m18gxf4o21urv4'
+  database: 'b5zhe2m18gxf4o21urv4',
+  connectionLimit: 10,  // Limita el número de conexiones
+  charset: 'utf8mb4',   // Asegura compatibilidad con caracteres especiales
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err);
-    return;
-  }
-  console.log('Connected to the database');
-});
+// Verificar la conexión cada cierto tiempo
+setInterval(() => {
+  db.query('SELECT 1', (err, results) => {
+    if (err) {
+      console.error('Error de conexión a la base de datos:', err);
+    } else {
+      console.log('Conexión a la base de datos activa');
+    }
+  });
+}, 60000); // Cada 60 segundos
 
-const tables = ['Retrabajos', 'faltapersonal', 'faltamaterial', 'actividadesnuevas', 'retrabajos'];
+// Rutas de la API para manejar los recursos de la base de datos
+const tables = ['Retrabajos', 'faltapersonal', 'faltamaterial', 'actividadesnuevas'];
 
-tables.forEach(table => {
-  // Create
+tables.forEach((table) => {
+  // Crear nuevo registro
   app.post(`/api/${table}`, (req, res) => {
     const query = `INSERT INTO ${table} SET ?`;
     db.query(query, req.body, (err, result) => {
@@ -54,8 +55,14 @@ tables.forEach(table => {
       }
     });
   });
-
-  // Read all
+  function formatDate(date) {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+}
+  // Obtener todos los registros
   app.get(`/api/${table}`, (req, res) => {
     const query = `SELECT * FROM ${table}`;
     db.query(query, (err, results) => {
@@ -67,21 +74,21 @@ tables.forEach(table => {
     });
   });
 
-  // Read one
+  // Obtener un solo registro por ID
   app.get(`/api/${table}/:id`, (req, res) => {
     const query = `SELECT * FROM ${table} WHERE id = ?`;
     db.query(query, [req.params.id], (err, results) => {
       if (err) {
         res.status(500).json({ error: err.message });
       } else if (results.length === 0) {
-        res.status(404).json({ message: 'Record not found' });
+        res.status(404).json({ message: 'Registro no encontrado' });
       } else {
         res.json(results[0]);
       }
     });
   });
 
-  // Update
+  // Actualizar un registro
   app.put(`/api/${table}/:id`, (req, res) => {
     const query = `UPDATE ${table} SET ? WHERE id = ?`;
     db.query(query, [req.body, req.params.id], (err) => {
@@ -93,28 +100,35 @@ tables.forEach(table => {
     });
   });
 
-  // Delete
+  // Eliminar un registro
   app.delete(`/api/${table}/:id`, (req, res) => {
     const query = `DELETE FROM ${table} WHERE id = ?`;
     db.query(query, [req.params.id], (err) => {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
-        res.json({ message: 'Record deleted successfully' });
+        res.json({ message: 'Registro eliminado con éxito' });
       }
     });
   });
 });
 
+// Rutas para servir los archivos HTML
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'retrabajos.html'));  // Ruta principal por defecto
 });
 
 app.get('/:page', (req, res) => {
   const page = req.params.page;
-  res.sendFile(path.join(__dirname, 'public', `${page}.html`));
+  const validPages = ['retrabajos', 'faltapersonal', 'faltamaterial', 'actividadesnuevas'];
+  if (validPages.includes(page)) {
+    res.sendFile(path.join(__dirname, 'public', `${page}.html`));
+  } else {
+    res.status(404).send('Página no encontrada');
+  }
 });
 
+// Iniciar el servidor
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Servidor ejecutándose en el puerto ${port}`);
 });

@@ -1,10 +1,10 @@
 :root {
-  --primary-color: #2a5d81;
-  --secondary-color: hwb(66 21% 55%);
+  --primary-color: #007bff;
+  --secondary-color: hwb(64 7% 87%);
   --accent-color: #e74c3c;
-  --background-color: #232627;
-  --text-color: #011d36;
-  --light-text-color: #0f0e0e93;
+  --background-color: #f7f7f7;
+  --text-color: #0e0d0d;
+  --light-text-color: #fafaf9da;
 }
 
 body {
@@ -20,12 +20,15 @@ body {
   overflow-x: auto;
   margin: 0;
   padding: 0;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn-container {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Cambia a columna en pantallas pequeñas */
+  justify-content: center;
+  align-items: center; /* Cambia a columna en pantallas pequeñas */
 }
 
 @media (min-width: 576px) {
@@ -123,11 +126,11 @@ th {
 }
 
 tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: #353533;
 }
 
 tr:hover {
-  background-color: #8b8585;
+  background-color: #dfd3d3;
 }
 
 .btn-container {
@@ -186,6 +189,8 @@ tr:hover {
   height: 100%;
   overflow: auto;
   background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-content {
@@ -197,6 +202,9 @@ tr:hover {
   max-width: 500px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  align-items: center;
+
 }
 
 .close {
@@ -215,11 +223,19 @@ tr:hover {
 }
 
 .form-group {
-  margin-bottom: 20px;
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0;
+    width: 100%;
 }
-
+.btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 .form-group label {
-  display: block;
+  display: flex;
   margin-bottom: 5px;
   font-weight: bold;
   color: var(--text-color);
@@ -229,7 +245,7 @@ tr:hover {
 .form-group textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #43136b;
   border-radius: 4px;
   font-size: 16px;
   transition: border-color 0.3s;
@@ -392,7 +408,7 @@ nav a:hover, nav a.active {
 
 .btn-edit {
   background-color: #2196F3;
-  color: white;
+  color: rgb(248, 196, 100);
 }
 
 .btn-delete {
