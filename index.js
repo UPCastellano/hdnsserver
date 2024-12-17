@@ -41,7 +41,7 @@ setInterval(() => {
 }, 60000); // Cada 60 segundos
 
 // Rutas de la API para manejar los recursos de la base de datos
-const tables = ['Retrabajos', 'faltapersonal', 'faltamaterial', 'actividadesnuevas'];
+const tables = ['Retrabajos', 'faltapersonal', 'faltamaterial', 'actividadesnuevas','oficios'];
 
 tables.forEach((table) => {
   // Crear nuevo registro
@@ -120,7 +120,7 @@ app.get('/', (req, res) => {
 
 app.get('/:page', (req, res) => {
   const page = req.params.page;
-  const validPages = ['retrabajos', 'faltapersonal', 'faltamaterial', 'actividadesnuevas'];
+  const validPages = ['retrabajos', 'faltapersonal', 'faltamaterial', 'actividadesnuevas', 'oficios'];
   if (validPages.includes(page)) {
     res.sendFile(path.join(__dirname, 'public', `${page}.html`));
   } else {
