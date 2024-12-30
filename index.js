@@ -1,9 +1,19 @@
 import express from 'express';
+import pkg from 'moment';
+const { moment } = pkg;
 import mysql from 'mysql2';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+// Configurar moment en español
+if (moment) {
+    moment.locale('es');
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

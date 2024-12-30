@@ -86,9 +86,18 @@ $(document).ready(function() {
             search: 'Buscar:'
             
         },
-       "error": function (xhr, error, thrown) {
+        "error": function (xhr, error, thrown) {
             console.error('Error en DataTables:', error);
-        } 
+        },
+        columnDefs: [{
+            targets: [2], // Columnas fecha, inicio, fin
+            render: function(data, type) {
+                if (type === 'display' && data) {
+                    return moment(data).format('DD-MM-YYYY');
+                }
+                return data;
+            }
+        }]
     });
 
     const modal = document.getElementById('modal');

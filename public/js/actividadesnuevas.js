@@ -73,7 +73,16 @@ $(document).ready(function() {
             infoEmpty: 'Mostrando 0 a 0 de 0 registros',
             infoFiltered: '(filtrado de _MAX_ registros totales)',
             search: 'Buscar:'
-        }
+        },
+        columnDefs: [{
+            targets: [1, 5, 6], // Ajusta estos índices según tus columnas de fecha
+            render: function(data) {
+                if (data) {
+                    return moment(data).format('DD-MM-YYYY');
+                }
+                return '';
+            }
+        }]
     });
 
     const modal = document.getElementById('modal');

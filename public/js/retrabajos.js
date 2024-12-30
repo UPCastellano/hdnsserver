@@ -92,7 +92,16 @@ $(document).ready(function() {
         },
        "error": function (xhr, error, thrown) {
             console.error('Error en DataTables:', error);
-        } 
+        },
+        columnDefs: [{
+            targets: [1, 5, 6], // Columnas fecha, inicio, fin
+            render: function(data, type) {
+                if (type === 'display' && data) {
+                    return moment(data).format('DD-MM-YYYY');
+                }
+                return data;
+            }
+        }]
     });
 
     const modal = document.getElementById('modal');
