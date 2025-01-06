@@ -1,7 +1,7 @@
 :root {
   --primary-color: #007bff;
   --secondary-color: hwb(64 7% 87%);
-  --accent-color: #e74c3c;
+  --accent-color: #b9e73c;
   --background-color: #f7f7f7;
   --text-color: #0e0d0d;
   --light-text-color: #fafaf9da;
@@ -15,7 +15,8 @@ body {
   color: var(--text-color);
   line-height: 1.6;
 }
-.table-container{
+
+.table-container {
   width: 100%;
   overflow-x: auto;
   margin: 0;
@@ -27,19 +28,22 @@ body {
 .btn-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center; /* Cambia a columna en pantallas pequeñas */
+  align-items: center;
+  margin-top: 20px;
 }
 
 @media (min-width: 576px) {
   .btn-container {
-      flex-direction: row; /* Cambia a fila en pantallas más grandes */
+    flex-direction: row;
+    /* Cambia a fila en pantallas más grandes */
   }
 }
 
 .table-responsive {
-  overflow-x: auto; /* Permite el desplazamiento horizontal en pantallas pequeñas */
+  overflow-x: auto;
+  /* Permite el desplazamiento horizontal en pantallas pequeñas */
 }
+
 .container {
   width: 100%;
   max-width: 1200px;
@@ -64,7 +68,8 @@ nav a {
   display: inline-block;
 }
 
-nav a:hover, nav a.active {
+nav a:hover,
+nav a.active {
   background-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
@@ -79,6 +84,7 @@ h1 {
 .pending {
   color: red;
 }
+
 .completed {
   color: green;
 }
@@ -86,7 +92,7 @@ h1 {
 .table-container {
   background-color: var(--light-text-color);
   border-radius: 8px;
-  padding:10px;
+  padding: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 10px;
   overflow-x: auto;
@@ -97,8 +103,11 @@ table.dataTable {
   width: 100% !important;
   margin: 0 auto;
   clear: both;
- 
+
   border-spacing: 0;
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 table {
@@ -112,7 +121,8 @@ table {
   overflow-x: auto;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #08034b;
   padding: 8px;
   text-align: center;
@@ -126,11 +136,11 @@ th {
 }
 
 tr:nth-child(even) {
-  background-color: #353533;
+  background-color: #f2f2f2;
 }
 
 tr:hover {
-  background-color: #dfd3d3;
+  background-color: rgba(0, 123, 255, 0.1);
 }
 
 .btn-container {
@@ -154,7 +164,7 @@ tr:hover {
 }
 
 .btn-primary:hover {
-  background-color: #10222e;
+  background-color: #0056b3;
   transform: translateY(-2px);
 }
 
@@ -165,7 +175,7 @@ tr:hover {
 }
 
 .btn-secondary:hover {
-  background-color: #27ae60;
+  background-color: #0056b3;
   transform: translateY(-2px);
 }
 
@@ -175,7 +185,7 @@ tr:hover {
 }
 
 .btn-danger:hover {
-  background-color: #c0392b;
+  background-color: #93c02b;
   transform: translateY(-2px);
 }
 
@@ -188,7 +198,7 @@ tr:hover {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
   justify-content: center;
   align-items: center;
 }
@@ -224,16 +234,24 @@ tr:hover {
 
 .form-group {
   display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 10px 0;
-    width: 100%;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0;
+  width: 100%;
+  background-color: #f0f8ff;
+  border-radius: 5px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  text-align: center;
 }
+
 .btn-container {
   display: flex;
   justify-content: center;
   margin-top: 20px;
 }
+
 .form-group label {
   display: flex;
   margin-bottom: 5px;
@@ -275,48 +293,56 @@ tr:hover {
     padding: 8px 16px;
     font-size: 14px;
   }
+
   .dataTables_wrapper {
-    font-size: 12px; /* Adjust font size for smaller screens */
-}
+    font-size: 12px;
+    /* Adjust font size for smaller screens */
+  }
 }
 
 .nav-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .logo {
-    height: 60px;
-    width: auto;
+  height: 60px;
+  width: auto;
 }
 
 .nav-links {
-    display: flex;
+  display: flex;
 }
 
 @media (max-width: 1200px) {
-    .nav-content {
-        flex-direction: column;
-    }
+  .nav-content {
+    flex-direction: column;
+  }
 
-    .logo {
-        margin-bottom: 10px;
-    }
+  .logo {
+    margin-bottom: 10px;
+  }
 
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
-nav a:hover, nav a.active {
-  background-color: rgba(255, 255, 255, 0.2); /* Fondo claro al pasar el mouse */
-  transform: translateY(-2px); /* Efecto de elevación */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+
+nav a:hover,
+nav a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  /* Fondo claro al pasar el mouse */
+  transform: translateY(-2px);
+  /* Efecto de elevación */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* Sombra para dar profundidad */
 }
+
 /* Estilos para el scroll */
 ::-webkit-scrollbar {
   width: 12px;
@@ -336,6 +362,7 @@ nav a:hover, nav a.active {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
 /* Estilos para los botones de DataTables */
 .btn {
   color: #0a0f0f;
@@ -348,7 +375,8 @@ nav a:hover, nav a.active {
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: var(--primary-color);
+  color: var(--light-text-color);
 }
 
 .btn-info {
@@ -360,11 +388,11 @@ nav a:hover, nav a.active {
 }
 
 .btn-danger {
-  background-color: #dc3545;
+  background-color: #9e02f863;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
+  background-color: #caff099c;
 }
 
 .btn:hover {
@@ -380,6 +408,7 @@ nav a:hover, nav a.active {
 .dt-buttons {
   margin-bottom: 1rem;
 }
+
 .btn-add {
   display: block;
   margin: 20px auto;
@@ -397,7 +426,8 @@ nav a:hover, nav a.active {
   background-color: #45a049;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit,
+.btn-delete {
   padding: 5px 10px;
   margin: 0 5px;
   border: none;
@@ -423,21 +453,70 @@ nav a:hover, nav a.active {
 .btn-delete:hover {
   background-color: #da190b;
 }
+
 .table-row-success {
-  background-color: #d4edda; /* Verde claro */
+  background-color: #d4edda;
+  /* Verde claro */
 }
 
 .table-row-warning {
-  background-color: #f1d371; /* Amarillo claro */
+  background-color: #f1d371;
+  /* Amarillo claro */
 }
 
 .table-row-danger {
-  background-color: #f8d7da; /* Rojo claro */
+  background-color: #f8d7da;
+  /* Rojo claro */
 }
+
 tr:nth-child(even) {
-  background-color: #7a7171; /* Color de fondo alternativo */
+  background-color: #7a7171;
+  /* Color de fondo alternativo */
 }
 
 tr:hover {
-  background-color: rgba(0, 0, 0, 0.1); /* Efecto hover más suave */
+  background-color: rgba(0, 0, 0, 0.1);
+  /* Efecto hover más suave */
 }
+
+.exportacion-personalizada {
+  background-color: #f8f9fa;
+  /* Color de fondo claro */
+  padding: 15px;
+  /* Espaciado interno */
+  border-radius: 5px;
+  /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* Sombra sutil */
+  margin-bottom: 20px;
+  /* Espaciado inferior */
+}
+
+.exportacion-personalizada label {
+  margin-right: 5px;
+  /* Espaciado entre etiqueta y control */
+  font-weight: bold;
+  /* Negrita para las etiquetas */
+}
+
+.exportacion-personalizada .form-control {
+  display: inline-block;
+  /* Asegura que los controles se alineen */
+  margin-right: 10px;
+  /* Espaciado entre controles */
+}
+
+.exportacion-personalizada .btn {
+  margin-top: 20px;
+  /* Espaciado superior para el botón */
+}
+
+/* Estilos para centrar el título de la caja de "Agregar Retrabajo" */
+h2.agregar-retrabajo {
+  text-align: center; /* Centrar el texto */
+  color: var(--primary-color); /* Color acorde a la página */
+  margin-bottom: 15px; /* Espaciado inferior */
+  font-size: 1.8em; /* Tamaño de fuente */
+  font-weight: bold; /* Negrita para el título */
+}
+

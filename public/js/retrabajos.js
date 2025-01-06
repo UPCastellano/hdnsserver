@@ -10,7 +10,21 @@ $(document).ready(function() {
             { data: 'fecha' },
             { data: 'nivel' },
             { data: 'actividad' },
-            { data: 'ubicacion' },
+            {
+                data: 'ubicacion',
+                render: function(data) {
+                    switch(data) {
+                        case 'A': return 'Edificio A';
+                        case 'B': return 'Edificio B';
+                        case 'C': return 'Edificio C';
+                        case 'D': return 'Edificio D';
+                        case 'E': return 'Edificio E';
+                        case 'F': return 'Edificio F';
+                        case 'G': return 'Edificio G';
+                        default: return data; // Devolver el valor original si no es un edificio conocido
+                    }
+                }
+            },
             { data: 'inicio' },
             { data: 'fin' },
             { data: 'impacto' },
@@ -18,8 +32,6 @@ $(document).ready(function() {
             { data: 'usuario' },
             { data: 'etapas' },
             {
-
-                
                 data: null,
                 render: function(data, type, row) {
                     return `
@@ -30,9 +42,7 @@ $(document).ready(function() {
                     `;
                 }
             }
-            
         ],
-            
         createdRow: function(row, data, dataIndex) {
             if (data.impacto > 5) {
                 $(row).addClass('table-row-danger'); // Si el impacto es mayor a 5, color rojo
@@ -81,25 +91,20 @@ $(document).ready(function() {
                 next: 'Siguiente',
                 previous: 'Anterior'
             },
-            
             lengthMenu: 'Mostrar _MENU_ registros por página',
             zeroRecords: 'No se encontraron resultados',
             info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
             infoEmpty: 'Mostrando 0 a 0 de 0 registros',
             infoFiltered: '(filtrado de _MAX_ registros totales)',
             search: 'Buscar:'
-            
-        },
-       "error": function (xhr, error, thrown) {
-            console.error('Error en DataTables:', error);
         },
         columnDefs: [{
-            targets: [1, 5, 6], // Columnas fecha, inicio, fin
-            render: function(data, type) {
-                if (type === 'display' && data) {
+            targets: [1, 5, 6], // Ajusta estos índices según tus columnas de fecha
+            render: function(data) {
+                if (data) {
                     return moment(data).format('DD-MM-YYYY');
                 }
-                return data;
+                return '';
             }
         }]
     });
@@ -242,4 +247,90 @@ $(document).ready(function() {
             }
         });
     }
+
+    $('#exportarPersonalizado').on('click', function() {
+        console.log("Botón de exportación presionado"); // Para depuración
+        var edificioSeleccionado = $('#filtroEdificioPersonalizado').val();
+        var fechaDesde = $('#fechaDesde').val();
+        var fechaHasta = $('#fechaHasta').val();
+        
+        var datos = table.rows().data().toArray();
+        
+        // Filtrar por edificio y rango de fechas
+        var datosFiltrados = datos.filter(row => {
+            var fecha = moment(row.fecha, ['DD-MM-YYYY', 'YYYY-MM-DD']);
+            
+            // Lógica de filtrado
+            var cumpleEdificio = edificioSeleccionado === "" || // Si se selecciona "Todos los Edificios"
+                (edificioSeleccionado === 'Edificio A' && (row.ubicacion === 'A' || row.ubicacion === 'Edificio A')) ||
+                (edificioSeleccionado === 'Edificio B' && (row.ubicacion === 'B' || row.ubicacion === 'Edificio B')) ||
+                (edificioSeleccionado === 'Edificio C' && (row.ubicacion === 'C' || row.ubicacion === 'Edificio C')) ||
+                (edificioSeleccionado === 'Edificio D' && (row.ubicacion === 'D' || row.ubicacion === 'Edificio D')) ||
+                (edificioSeleccionado === 'Edificio E' && (row.ubicacion === 'E' || row.ubicacion === 'Edificio E')) ||
+                (edificioSeleccionado === 'Edificio F' && (row.ubicacion === 'F' || row.ubicacion === 'Edificio F')) ||
+                (edificioSeleccionado === 'Edificio G' && (row.ubicacion === 'G' || row.ubicacion === 'Edificio G')) ||
+                (edificioSeleccionado === 'Otros' && !['A', 'B', 'C', 'D', 'E', 'F', 'G'].includes(row.ubicacion));
+            
+            var cumpleFecha = (!fechaDesde || fecha.isSameOrAfter(moment(fechaDesde, ['DD-MM-YYYY', 'YYYY-MM-DD']))) && 
+                              (!fechaHasta || fecha.isSameOrBefore(moment(fechaHasta, ['DD-MM-YYYY', 'YYYY-MM-DD'])));
+            
+            return cumpleEdificio && cumpleFecha;
+        });
+
+        // Crear un nuevo array con solo las columnas deseadas
+        var datosExportar = datosFiltrados.map((row) => ({
+            'ID': row.id,
+            'Nivel': row.nivel,
+            'Actividad': row.actividad,
+            'Ubicación': row.ubicacion,
+            'Inicio': moment(row.inicio, ['DD-MM-YYYY', 'YYYY-MM-DD']).format('DD-MM-YYYY'),
+            'Fin': moment(row.fin, ['DD-MM-YYYY', 'YYYY-MM-DD']).format('DD-MM-YYYY'),
+            'Impacto': row.impacto,
+            'Observación': row.observacion
+        }));
+
+        // Verificar si hay datos para exportar
+        if (datosExportar.length === 0) {
+            alert('No hay datos para exportar con los filtros seleccionados.');
+            return;
+        }
+
+        // Crear una hoja de Excel
+        var wb = XLSX.utils.book_new();
+        var wsData = [];
+        var edificiosAgrupados = {}; // Objeto para agrupar datos por edificio
+
+        // Agrupar datos por edificio
+        datosExportar.forEach(row => {
+            var edificio = row.Ubicación;
+            if (!edificiosAgrupados[edificio]) {
+                edificiosAgrupados[edificio] = [];
+            }
+            edificiosAgrupados[edificio].push(row);
+        });
+
+        // Agregar datos a la hoja de Excel
+        for (var edificio in edificiosAgrupados) {
+            // Agregar encabezado para el edificio
+            wsData.push([`Datos para ${edificio}`]);
+            wsData.push(['ID', 'Nivel', 'Actividad', 'Ubicación', 'Inicio', 'Fin', 'Impacto', 'Observación']); // Encabezados
+
+            // Agregar los datos del edificio
+            edificiosAgrupados[edificio].forEach(row => {
+                wsData.push([row.ID, row.Nivel, row.Actividad, row.Ubicación, row.Inicio, row.Fin, row.Impacto, row.Observación]);
+            });
+
+            wsData.push([]); // Espacio entre grupos de edificios
+        }
+
+        // Convertir los datos a una hoja de Excel
+        var ws = XLSX.utils.aoa_to_sheet(wsData);
+        XLSX.utils.book_append_sheet(wb, ws, 'Reporte Agrupado');
+
+        var fecha = moment().format('DD-MM-YYYY');
+        var nombreArchivo = `Reporte_Retrabajos_${edificioSeleccionado || 'Todos'}_${fecha}.xlsx`;
+        
+        // Escribir el archivo
+        XLSX.writeFile(wb, nombreArchivo);
+    });
 });
